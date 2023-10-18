@@ -52,7 +52,8 @@ def phases_events(event_name_1,event_name_2,fbest=40.0,fhigh=100.0,flow=20.0):
     Dphi_f_2 = phase_fhigh_2 - phase_flow_2
     
     
-    #Distance with phases
+    #Sets of parameters
+    #All phases
     parameters_1 = np.stack((phase_H_1,
                                  phase_L_1,
                                  phase_V_1,
@@ -69,6 +70,7 @@ def phases_events(event_name_1,event_name_2,fbest=40.0,fhigh=100.0,flow=20.0):
                                  Dphi_f_2),
                                 axis=1)
     
+    #Detector phases
     det_phases_1 = np.stack((phase_H_1,
                                  phase_L_1,
                                  phase_V_1),
@@ -79,6 +81,7 @@ def phases_events(event_name_1,event_name_2,fbest=40.0,fhigh=100.0,flow=20.0):
                                  phase_V_2),
                                 axis=1)
     
+    #Time delay phases
     tau_phases_1 = np.stack((tau_HL_1,
                                  tau_HV_1),
                                 axis=1)
