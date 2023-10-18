@@ -85,7 +85,7 @@ def phazap_plot(event_name_1,event_name_2,fbest=40.0,fhigh=100.0,flow=20.0):
 
     plt.suptitle(r'Minimum distance =%s' % np.round(np.min(dist),2)+r', volume = %s' % np.round(np.min(vol_phases_1),2), va='bottom')
 
-    plt.savefig(dir_out+'phases_all_'+event_name_1+'_'+event_name_2+'_fbest_%s_fhigh_%s_flow_%s.pdf' % (int(fbest),int(fhigh),int(flow)), bbox_inches='tight', transparent=True)
+    plt.savefig(dir_out+'phazap_'+event_name_1+'_'+event_name_2+'_fbest_%s_fhigh_%s_flow_%s.pdf' % (int(fbest),int(fhigh),int(flow)), bbox_inches='tight', transparent=True)
 
 
     return print(event_name_1,event_name_2,' plot done!')
