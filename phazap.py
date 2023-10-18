@@ -170,6 +170,10 @@ def phazap(event_name_1,event_name_2,fbest=40.0,fhigh=100.0,flow=20.0):
     
     vol_J = vol_phases_12 + vol_phases_21
 
+    #Phase shift
+    phase_shifts = np.array([0,1,2,-1,-2])*np.pi/2
+    phase_shift = phase_shifts[np.argmin(D_J_n)]
+
     #ADD P-VALUE
 
-    return D_J, vol_J
+    return D_J, vol_J, phase_shift
