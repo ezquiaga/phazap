@@ -5,10 +5,7 @@ import gwphase
 import gw_utils as gwutils
 import tension_utils as tension
 
-#Directory where phases are stored
-dir_phase = 'phazap_phases_o4/' #Change this accordingly
-
-def phases_events(event_name_1,event_name_2,fbest=40.0,fhigh=100.0,flow=20.0):
+def phases_events(event_name_1,event_name_2,fbest=40.0,fhigh=100.0,flow=20.0,dir_phase = 'phazap_phases_o4/'):
     ##Event 1
     data_event_1 = h5py.File(dir_phase+'phases_'+event_name_1+'_fbest_%s_fhigh_%s_flow_%s.hdf5' % (fbest,fhigh,flow), "r")
     variables_event_1 = ['phase_H', 'phase_L', 'phase_V', 'Dphi_f', 'tau_HL', 'tau_HV', 'tau_LV']
@@ -92,9 +89,9 @@ def phases_events(event_name_1,event_name_2,fbest=40.0,fhigh=100.0,flow=20.0):
     
     return parameters_1, parameters_2, det_phases_1, det_phases_2, tau_phases_1, tau_phases_2, Dphi_f_1, Dphi_f_2, above_below
 
-def phazap_all_metrics_one_ordering(event_name_1,event_name_2,fbest=40.0,fhigh=100.0,flow=20.0):
+def phazap_all_metrics_one_ordering(event_name_1,event_name_2,fbest=40.0,fhigh=100.0,flow=20.0,dir_phase = 'phazap_phases_o4/'):
 
-    parameters_1, parameters_2, det_phases_1, det_phases_2, tau_phases_1, tau_phases_2, Dphi_f_1, Dphi_f_2, above_below = phases_events(event_name_1,event_name_2,fbest,fhigh,flow)
+    parameters_1, parameters_2, det_phases_1, det_phases_2, tau_phases_1, tau_phases_2, Dphi_f_1, Dphi_f_2, above_below = phases_events(event_name_1,event_name_2,fbest,fhigh,flow,dir_phase)
 
     nphases = 3
 
@@ -134,9 +131,9 @@ def phazap_all_metrics_one_ordering(event_name_1,event_name_2,fbest=40.0,fhigh=1
 
     return neff, vol_1, vol_2, vol_phases_1, vol_phases_2, dist_all, dist_phases, dist_Tphases, dist_Dphi
 
-def phazap_one_ordering(event_name_1,event_name_2,fbest=40.0,fhigh=100.0,flow=20.0):
+def phazap_one_ordering(event_name_1,event_name_2,fbest=40.0,fhigh=100.0,flow=20.0,dir_phase = 'phazap_phases_o4/'):
 
-    parameters_1, parameters_2, det_phases_1, det_phases_2, tau_phases_1, tau_phases_2, Dphi_f_1, Dphi_f_2, above_below = phases_events(event_name_1,event_name_2,fbest,fhigh,flow)
+    parameters_1, parameters_2, det_phases_1, det_phases_2, tau_phases_1, tau_phases_2, Dphi_f_1, Dphi_f_2, above_below = phases_events(event_name_1,event_name_2,fbest,fhigh,flow,dir_phase)
 
     nphases = 3
     #Compute volume phases     
@@ -159,10 +156,10 @@ def phazap_one_ordering(event_name_1,event_name_2,fbest=40.0,fhigh=100.0,flow=20
 
     return vol_phases_1, dist_all
 
-def phazap(event_name_1,event_name_2,fbest=40.0,fhigh=100.0,flow=20.0):
+def phazap(event_name_1,event_name_2,fbest=40.0,fhigh=100.0,flow=20.0,dir_phase = 'phazap_phases_o4/'):
     #Compute volumes and distances for both orderings
-    vol_phases_12, dist_12 = phazap_one_ordering(event_name_1,event_name_2,fbest,fhigh,flow)
-    vol_phases_21, dist_21 = phazap_one_ordering(event_name_2,event_name_1,fbest,fhigh,flow)
+    vol_phases_12, dist_12 = phazap_one_ordering(event_name_1,event_name_2,fbest,fhigh,flow,dir_phase)
+    vol_phases_21, dist_21 = phazap_one_ordering(event_name_2,event_name_1,fbest,fhigh,flow,dir_phase)
 
     dist_21_swap = np.array([dist_21[0],dist_21[3],dist_21[4],dist_21[1],dist_21[2]])
     D_J_n = np.maximum(dist_12,dist_21_swap)
@@ -178,7 +175,7 @@ def phazap(event_name_1,event_name_2,fbest=40.0,fhigh=100.0,flow=20.0):
 
     return D_J, vol_J, phase_shift, D_J_n
 
-def phazap_summary(event_name_1,event_name_2,fbest=40.0,fhigh=100.0,flow=20.0):
-    D_J, vol_J, phase_shift, D_J_n = phazap(event_name_1,event_name_2,fbest,fhigh,flow)
+def phazap_summary(event_name_1,event_name_2,fbest=40.0,fhigh=100.0,flow=20.0,dir_phase = 'phazap_phases_o4/'):
+    D_J, vol_J, phase_shift, D_J_n = phazap(event_name_1,event_name_2,fbest,fhigh,flow,dir_phase)
 
     return D_J, vol_J, phase_shift

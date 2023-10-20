@@ -5,10 +5,7 @@ from input import Input
 import bilby
 import h5py
 
-#Directory where phases are stored
-dir_phase = 'phazap_phases_o4/' #Change this accordingly
-
-def postprocess_phase(sname,file_name,fbest=40.,fhigh=100.,flow=20.):
+def postprocess_phase(sname,file_name,fbest=40.,fhigh=100.,flow=20.,dir_phase = 'phazap_phases_o4/'):
     #sname is the superevent name
     #fbest is the pivotal frequency
     #fhigh is the high frequency for the phase evolution
