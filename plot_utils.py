@@ -12,10 +12,7 @@ import matplotlib.pyplot as plt
 #mpl.rcParams['text.usetex'] = True
 #mpl.rcParams['font.family'] = 'serif'
 
-#Directory to save the plots
-dir_out = 'phazap_plots/'
-
-def phazap_plot(event_name_1,event_name_2,fbest=40.0,fhigh=100.0,flow=20.0):
+def phazap_plot(event_name_1,event_name_2,fbest=40.0,fhigh=100.0,flow=20.0,dir_out = 'phazap_plots/'):
 
     parameters_1, parameters_2, det_phases_1, det_phases_2, tau_phases_1, tau_phases_2, Dphi_f_1, Dphi_f_2, above_below = phazap.phases_events(event_name_1,event_name_2,fbest,fhigh,flow)
 
