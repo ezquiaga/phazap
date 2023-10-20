@@ -176,4 +176,9 @@ def phazap(event_name_1,event_name_2,fbest=40.0,fhigh=100.0,flow=20.0):
 
     #ADD P-VALUE
 
+    return D_J, vol_J, phase_shift, D_J_n
+
+def phazap_summary(event_name_1,event_name_2,fbest=40.0,fhigh=100.0,flow=20.0):
+    D_J, vol_J, phase_shift, D_J_n = phazap(event_name_1,event_name_2,fbest,fhigh,flow)
+
     return D_J, vol_J, phase_shift
