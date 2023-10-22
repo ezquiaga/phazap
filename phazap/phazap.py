@@ -5,6 +5,90 @@ import gwphase
 import gw_utils as gwutils
 import tension_utils as tension
 
+def phases_events(event_name_1,event_name_2,fbest=40.0,fhigh=100.0,flow=20.0,dir_phase = 'phazap_phases_o4/'):
+    ##Event 1
+    data_event_1 = h5py.File(dir_phase+'phases_'+event_name_1+'_fbest_%s_fhigh_%s_flow_%s.hdf5' % (fbest,fhigh,flow), "r")
+    variables_event_1 = ['phase_H', 'phase_L', 'phase_V', 'Dphi_f', 'tau_HL', 'tau_HV', 'tau_LV']
+    for var in variables_event_1:
+        globals()[var+'_1'] = np.array(data_event_1[var])
+    geocent_time_1 = np.array(data_event_1['geocent_time'])
+    
+    ##Event 2
+    data_event_2 = h5py.File(dir_phase+'phases_'+event_name_2+'_fbest_%s_fhigh_%s_flow_%s.hdf5' % (fbest,fhigh,flow), "r")
+    variables_event_2 = ['phase_fbest','a22_fbest','zeta_fbest','r_fbest','phase_fhigh','phase_flow','tau_H','tau_L','tau_V',
+                         'ra', 'dec', 'psi', 'geocent_time']
+    for var in variables_event_2:
+        globals()[var+'_2'] = np.array(data_event_2[var])
+    
+    Nsamples_2 = len(phase_fbest_2)
+    tc_shift_21 = np.mean(geocent_time_2) - np.mean(geocent_time_1)
+    
+    above_below = np.zeros(Nsamples_2)
+    for l in range(Nsamples_2):
+        tau_H_2[l] = 2.*np.pi*fbest*gwutils.time_delay_det("H1", ra_2[l], dec_2[l], geocent_time_2[l]-tc_shift_21)
+        tau_L_2[l] = 2.*np.pi*fbest*gwutils.time_delay_det("L1", ra_2[l], dec_2[l], geocent_time_2[l]-tc_shift_21)
+        tau_V_2[l] = 2.*np.pi*fbest*gwutils.time_delay_det("V1", ra_2[l], dec_2[l], geocent_time_2[l]-tc_shift_21)
+         #Define quadrant of the source
+        above_below[l] = gwutils.N_dot_cross_d123(ra_2[l],dec_2[l],geocent_time_2[l],gwutils.H1_vertex_meters,gwutils.L1_vertex_meters,gwutils.V1_vertex_meters)
+    
+    #Arrival time phase difference between detectors
+    tau_HL_2 = tau_H_2-tau_L_2
+    tau_HV_2 = tau_H_2-tau_V_2
+    tau_LV_2 = tau_L_2-tau_V_2
+    
+    #Detector phases at reference frame of event 1
+    Fp_H_2, Fx_H_2 = gwutils.FpFx("H1",ra_2, dec_2, psi_2, geocent_time_2 - tc_shift_21)
+    Fp_L_2, Fx_L_2 = gwutils.FpFx("L1",ra_2, dec_2, psi_2, geocent_time_2 - tc_shift_21)
+    Fp_V_2, Fx_V_2 = gwutils.FpFx("V1",ra_2, dec_2, psi_2, geocent_time_2 - tc_shift_21)
+    
+    phase_H_2 = gwphase.phase_d(phase_fbest_2,a22_fbest_2,zeta_fbest_2,Fp_H_2,Fx_H_2)
+    phase_L_2 = gwphase.phase_d(phase_fbest_2,a22_fbest_2,zeta_fbest_2,Fp_L_2,Fx_L_2)
+    phase_V_2 = gwphase.phase_d(phase_fbest_2,a22_fbest_2,zeta_fbest_2,Fp_V_2,Fx_V_2)
+    
+    #Detector phase evolution in frequency
+    Dphi_f_2 = phase_fhigh_2 - phase_flow_2
+    
+    
+    #Sets of parameters
+    #All phases
+    parameters_1 = np.stack((phase_H_1,
+                                 phase_L_1,
+                                 phase_V_1,
+                                 tau_HL_1,
+                                 tau_HV_1,
+                                 Dphi_f_1),
+                                axis=1)
+    
+    parameters_2 = np.stack((phase_H_2,
+                                 phase_L_2,
+                                 phase_V_2,
+                                 tau_HL_2,
+                                 tau_HV_2,
+                                 Dphi_f_2),
+                                axis=1)
+    
+    #Detector phases
+    det_phases_1 = np.stack((phase_H_1,
+                                 phase_L_1,
+                                 phase_V_1),
+                                axis=1)
+    
+    det_phases_2 = np.stack((phase_H_2,
+                                 phase_L_2,
+                                 phase_V_2),
+                                axis=1)
+    
+    #Time delay phases
+    tau_phases_1 = np.stack((tau_HL_1,
+                                 tau_HV_1),
+                                axis=1)
+    
+    tau_phases_2 = np.stack((tau_HL_2,
+                                 tau_HV_2),
+                                axis=1)
+    
+    return parameters_1, parameters_2, det_phases_1, det_phases_2, tau_phases_1, tau_phases_2, Dphi_f_1, Dphi_f_2, above_below
+
 def phazap_all_metrics_one_ordering(event_name_1,event_name_2,fbest=40.0,fhigh=100.0,flow=20.0,dir_phase = 'phazap_phases_o4/'):
 
     parameters_1, parameters_2, det_phases_1, det_phases_2, tau_phases_1, tau_phases_2, Dphi_f_1, Dphi_f_2, above_below = phases_events(event_name_1,event_name_2,fbest,fhigh,flow,dir_phase)
