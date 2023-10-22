@@ -12,6 +12,7 @@ setuptools.setup(
         "phazap",
     ],
     install_requires=[
+        "bilby",
         "configargparse",
     ],
     classifiers=[
