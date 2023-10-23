@@ -9,8 +9,6 @@ from . import gwphase
 from . import gw_utils as gwutils
 from .pe_input import ParameterEstimationInput
 
-_internal_counter = 1
-
 def postprocess_phase(
         pe_result,
         flow=20.,
@@ -161,9 +159,14 @@ def postprocess_phase(
 
     # Saving the data
     if label is None:
-        global _internal_counter # Not a very good practice
-        label = f"event{_internal_counter}"
-        _internal_counter += 1
+        if type(pe_result) is str:
+            # Try to figure out the proper label from filename
+            label = os.path.basename(pe_result).split('.')[0]
+        else:
+            # Can't do much at this point......
+            label = "event"
+        
+        logger.info(f"Assigning {label} as the label")
 
     if output_filename is None:
         output_filename = _default_postprocessed_phase_filename_str.format(
