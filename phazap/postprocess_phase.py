@@ -1,27 +1,53 @@
+import os
 import numpy as np
-import gwphase
-import gw_utils as gwutils
-from input import Input
-import bilby
 import h5py
+import bilby
+from tqdm import tqdm
 
-def postprocess_phase(sname,file_name,fbest=40.,fhigh=100.,flow=20.,dir_phase = 'phazap_phases_o4/'):
+from . import logger, _default_postprocessed_phase_dir, _default_postprocessed_phase_filename_str
+from . import gwphase
+from . import gw_utils as gwutils
+from .pe_input import ParameterEstimationInput
+
+_internal_counter = 1
+
+def postprocess_phase(
+        pe_result,
+        flow=20.,
+        fhigh=100.,
+        fbest=40.,
+        label=None,
+        output_dir=_default_postprocessed_phase_dir,
+        output_filename=None,
+    ):
+    """
     #sname is the superevent name
     #fbest is the pivotal frequency
     #fhigh is the high frequency for the phase evolution
     #flow is the low frequency for the phase evolution
+    """
 
-    #Event
-    ip = Input.from_bilby_result_file(file_name)
+    if type(pe_result) is ParameterEstimationInput:
+        ip = pe_result # No need to do anything
+    elif type(pe_result) is str:
+        try:
+            # Maybe it is a bilby result file?
+            ip = ParameterEstimationInput.from_bilby_result_file(pe_result)
+        except:
+            try:
+                # Maybe it is a PESummary file?
+                ip = ParameterEstimationInput.from_PESummary_file(pe_result)
+            except:
+                raise ValueError(f"Does not understand {pe_result}")
 
     posterior_samples = ip.posterior_samples
     fref = ip.reference_frequency
     duration = ip.duration 
     sampling_frequency = ip.sampling_frequency
     ifos = ip.ifo_list
-    print('Detectors online ',ifos)
+    logger.info(f"Detectors online {ifos}")
     approx = ip.waveform_approximant
-    print('Waveform approximant ',approx)
+    logger.info(f"Waveform approximant {approx}")
 
     #15D
     phiRef = posterior_samples['phase']
@@ -71,7 +97,7 @@ def postprocess_phase(sname,file_name,fbest=40.,fhigh=100.,flow=20.,dir_phase = 
     rang_fs = (fs >= flow) & (fs <= fhigh)
     i_best = np.argmin(abs(fs[rang_fs]-fbest))
 
-    for i in range(N_posteriors):
+    for i in tqdm(range(N_posteriors)):
         phase_fbest[i], a22_fbest[i], zeta_fbest[i], r_fbest[i], phase_fhigh[i], phase_flow[i] = gwphase.phases_fs(waveform_generator,
                                         detec = "H1",
                                         rang_fs = rang_fs,
@@ -134,8 +160,27 @@ def postprocess_phase(sname,file_name,fbest=40.,fhigh=100.,flow=20.,dir_phase = 
     variables = [*variables_event_1, *variables_event_2]
 
     # Saving the data
-    with h5py.File(dir_phase+'phases_'+sname+'_fbest_%s_fhigh_%s_flow_%s.hdf5' % (fbest,fhigh,flow), "w") as f:
+    if label is None:
+        global _internal_counter # Not a very good practice
+        label = f"event{_internal_counter}"
+        _internal_counter += 1
+
+    if output_filename is None:
+        output_filename = _default_postprocessed_phase_filename_str.format(
+            label,
+            fbest,
+            fhigh,
+            flow
+        )
+
+    output_fullpath = os.path.join(output_dir, output_filename)
+    with h5py.File(output_fullpath, "w") as f:
         for var in variables:
             dset = f.create_dataset(var, data=eval(var))
+        
+        f.attrs["fbest"] = fbest
+        f.attrs["fhigh"] = fhigh
+        f.attrs["flow"] = flow
+        f.attrs["label"] = label
     
-    return print(sname, ' post-processing done!')
+    logger.info(f"Postprocessing completed and saved to {output_fullpath}")

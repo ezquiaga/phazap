@@ -1,6 +1,5 @@
 import numpy as np
-import gw_utils as gwutils
-
+from . import gw_utils as gwutils
 
 """
 Phase at new frequency

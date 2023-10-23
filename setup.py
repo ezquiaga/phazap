@@ -13,6 +13,8 @@ setuptools.setup(
     ],
     install_requires=[
         "bilby",
+        "bilby_pipe",
+        "pesummary",
         "configargparse",
     ],
     classifiers=[
