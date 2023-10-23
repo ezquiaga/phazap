@@ -14,6 +14,7 @@ def postprocess_phase(
         flow=20.,
         fhigh=100.,
         fbest=40.,
+        superevent_name=None,
         label=None,
         output_dir=_default_postprocessed_phase_dir,
         output_filename=None,
@@ -161,16 +162,21 @@ def postprocess_phase(
     if label is None:
         if type(pe_result) is str:
             # Try to figure out the proper label from filename
-            label = os.path.basename(pe_result).split('.')[0]
+            label_for_filename = os.path.basename(pe_result).split('.')[0].split('_')[0]
         else:
-            # Can't do much at this point......
-            label = "event"
-        
-        logger.info(f"Assigning {label} as the label")
+            if superevent_name is not None:
+                label_for_filename = superevent_name
+            else:
+                # Can't do much at this point......
+                label_for_filename = "event"
+    else:
+        if superevent_name is not None:
+            label_for_filename = f"{superevent_name}_{label}"
 
+    logger.info(f"Assigning {label} as the label")
     if output_filename is None:
         output_filename = _default_postprocessed_phase_filename_str.format(
-            label,
+            label_for_filename,
             fbest,
             fhigh,
             flow
@@ -184,6 +190,9 @@ def postprocess_phase(
         f.attrs["fbest"] = fbest
         f.attrs["fhigh"] = fhigh
         f.attrs["flow"] = flow
-        f.attrs["label"] = label
+        if label is not None:
+            f.attrs["label"] = label
+        if superevent_name is not None:
+            f.attrs["superevent_name"] = superevent_name
     
     logger.info(f"Postprocessing completed and saved to {output_fullpath}")
