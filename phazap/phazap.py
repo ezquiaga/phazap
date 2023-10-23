@@ -197,7 +197,7 @@ def phazap_one_ordering(event1_postprocessed_phase, event2_postprocessed_phase):
 def _phazap(event1_postprocessed_phase, event2_postprocessed_phase):
     #Compute volumes and distances for both orderings
     vol_phases_12, dist_12 = phazap_one_ordering(event1_postprocessed_phase, event2_postprocessed_phase)
-    vol_phases_21, dist_21 = phazap_one_ordering(event1_postprocessed_phase, event2_postprocessed_phase)
+    vol_phases_21, dist_21 = phazap_one_ordering(event2_postprocessed_phase, event1_postprocessed_phase)
 
     dist_21_swap = np.array([dist_21[0],dist_21[3],dist_21[4],dist_21[1],dist_21[2]])
     D_J_n = np.maximum(dist_12,dist_21_swap)
@@ -231,7 +231,7 @@ def phazap(event_1, event_2):
                     except:
                         raise ValueError(f"Does not understand {x}")
             else:
-                raise NotImplemented("Currently only support a file path as the value")
+                raise NotImplementedError("Currently only support a file path as the value")
     
     postprocessed_phase_1 = check_if_postprocessed(event_1)
     postprocessed_phase_2 = check_if_postprocessed(event_2)
