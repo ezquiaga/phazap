@@ -214,12 +214,12 @@ def postprocess_phase(
     # Saving the data
     variables = [*_variables_event_1, *_variables_event_2]
     if label is None:
-        if type(pe_result) is str:
-            # Try to figure out the proper label from filename
-            label_for_filename = os.path.basename(pe_result).split('.')[0].split('_')[0]
-        else:
-            if superevent_name is not None:
+        if superevent_name is not None:
                 label_for_filename = superevent_name
+        else:
+            if type(pe_result) is str:
+                # Try to figure out the proper label from filename
+                label_for_filename = os.path.basename(pe_result).split('.')[0].split('_')[0]
             else:
                 # Can't do much at this point......
                 label_for_filename = "event"
