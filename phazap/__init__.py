@@ -54,7 +54,5 @@ _prog_ = "phazap"
 setup_logger(_prog_)
 logger = logging.getLogger(_prog_)
 
-# NOTE Doing this is potentially DANGEREOUS
 from .postprocess_phase import postprocess_phase
 from .phazap import phazap, phazap_summary
-# After this, it is no longer possible to access the codes inside phazp.py and postprocess_phase.py
