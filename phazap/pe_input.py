@@ -19,7 +19,7 @@ _required_parameters = [
     "psi",
 ]
 
-class Input():
+class ParameterEstimationInput():
     def __init__(
         self,
         posterior_samples,

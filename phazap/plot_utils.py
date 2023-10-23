@@ -1,7 +1,7 @@
 import numpy as np
-import phazap
-import utils
-import tension_utils as tension
+
+from . import utils
+from . import tension_utils as tension
 
 #PLOTS
 import getdist
