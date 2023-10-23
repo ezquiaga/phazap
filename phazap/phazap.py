@@ -1,10 +1,10 @@
 import numpy as np
-import h5py
+import os
 
 from . import gwphase
 from . import gw_utils as gwutils
 from . import tension_utils as tension
-from .postprocess_phase import PostprocessedPhase, _variables_event_1, _variables_event_2
+from .postprocess_phase import postprocess_phase, PostprocessedPhase, _variables_event_1, _variables_event_2
 
 def phases_events(event1_postprocessed_phase, event2_postprocessed_phase):
     assert event1_postprocessed_phase.fbest == event2_postprocessed_phase.fbest, "The two sets of phases have different fbest"
@@ -193,11 +193,11 @@ def phazap_one_ordering(event1_postprocessed_phase, event2_postprocessed_phase):
 
     return vol_phases_1, dist_all
 
-"""
-def phazap(event_name_1,event_name_2,fbest=40.0,fhigh=100.0,flow=20.0,dir_phase = 'phazap_phases_o4/'):
+
+def _phazap(event1_postprocessed_phase, event2_postprocessed_phase):
     #Compute volumes and distances for both orderings
-    vol_phases_12, dist_12 = phazap_one_ordering(event_name_1,event_name_2,fbest,fhigh,flow,dir_phase)
-    vol_phases_21, dist_21 = phazap_one_ordering(event_name_2,event_name_1,fbest,fhigh,flow,dir_phase)
+    vol_phases_12, dist_12 = phazap_one_ordering(event1_postprocessed_phase, event2_postprocessed_phase)
+    vol_phases_21, dist_21 = phazap_one_ordering(event1_postprocessed_phase, event2_postprocessed_phase)
 
     dist_21_swap = np.array([dist_21[0],dist_21[3],dist_21[4],dist_21[1],dist_21[2]])
     D_J_n = np.maximum(dist_12,dist_21_swap)
@@ -213,8 +213,32 @@ def phazap(event_name_1,event_name_2,fbest=40.0,fhigh=100.0,flow=20.0,dir_phase 
 
     return D_J, vol_J, phase_shift, D_J_n
 
-def phazap_summary(event_name_1,event_name_2,fbest=40.0,fhigh=100.0,flow=20.0,dir_phase = 'phazap_phases_o4/'):
-    D_J, vol_J, phase_shift, D_J_n = phazap(event_name_1,event_name_2,fbest,fhigh,flow,dir_phase)
+def phazap(event_1, event_2):
+    def check_if_postprocessed(x):
+        if type(x) is PostprocessedPhase:
+            # x is indeed a PostprocessedPhase object, return it directly
+            return x
+        if type(x) is str:
+            if os.path.exists(x):
+                # x is a file path
+                try:
+                    # Maybe it is already postprocessed?
+                    return PostprocessedPhase.from_file(x)
+                except:
+                    try:
+                        # Maybe it is a summary file?
+                        return postprocess_phase(x)
+                    except:
+                        raise ValueError(f"Does not understand {x}")
+            else:
+                raise NotImplemented("Currently only support a file path as the value")
+    
+    postprocessed_phase_1 = check_if_postprocessed(event_1)
+    postprocessed_phase_2 = check_if_postprocessed(event_2)
+
+    return _phazap(postprocessed_phase_1, postprocessed_phase_2)
+
+def phazap_summary(event_1, event_2):
+    D_J, vol_J, phase_shift, D_J_n = phazap(event_1, event_2)
 
     return D_J, vol_J, phase_shift
-"""
