@@ -15,6 +15,7 @@ setuptools.setup(
         "bilby",
         "bilby_pipe",
         "pesummary",
+        "getdist",
         "configargparse",
     ],
     classifiers=[
