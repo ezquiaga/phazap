@@ -1,5 +1,17 @@
 import numpy as np
 
+def format_pretty_phase_shift(phase_shift):
+    # phase_shift can only be multiple of pi/2
+    prefactor = int(phase_shift/np.pi * 2) # This should be an integer
+    conversion_chart = {
+        0: "0",
+        1: "+pi/2",
+        2: "+pi",
+        -1: "-pi/2",
+        -2: "-pi",
+    }
+    return conversion_chart[prefactor]
+
 """ Compute mode """
 
 #1D Maximum likelihood value from posterior samples

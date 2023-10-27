@@ -1,20 +1,29 @@
+import os
 import numpy as np
 
+import getdist
+from getdist import plots
+import matplotlib as mpl
+mpl.rcParams['text.usetex'] = True
+mpl.rcParams['font.family'] = 'serif'
+import matplotlib.pyplot as plt
+
+from .phazap import phases_events
 from . import utils
 from . import tension_utils as tension
 
-#PLOTS
-import getdist
-from getdist import plots
-import matplotlib.pyplot as plt
-#%matplotlib inline
-#%config InlineBackend.figure_format='retina'
-#mpl.rcParams['text.usetex'] = True
-#mpl.rcParams['font.family'] = 'serif'
+_default_plot_filename_str = "phazap_{}_{}_fbest_{}_fhigh_{}_flow_{}.pdf"
 
-def phazap_plot(event_name_1,event_name_2,fbest=40.0,fhigh=100.0,flow=20.0,dir_phase = 'phazap_phases_o4/',dir_out = 'phazap_plots/'):
+def phazap_plot(event1_postprocessed_phase, event2_postprocessed_phase, output_dir="./", output_filename=None):
 
-    parameters_1, parameters_2, det_phases_1, det_phases_2, tau_phases_1, tau_phases_2, Dphi_f_1, Dphi_f_2, above_below = phazap.phases_events(event_name_1,event_name_2,fbest,fhigh,flow,dir_phase)
+    parameters_1, parameters_2, det_phases_1, det_phases_2, tau_phases_1, tau_phases_2, Dphi_f_1, Dphi_f_2, above_below = phases_events(event1_postprocessed_phase, event2_postprocessed_phase)
+
+    event_name_1 = "event_1"
+    if event1_postprocessed_phase.superevent_name is not None:
+        event_name_1 = event1_postprocessed_phase.superevent_name
+    event_name_2 = "event_2"
+    if event2_postprocessed_phase.superevent_name is not None:
+        event_name_2 = event2_postprocessed_phase.superevent_name
 
     nphases = 3
     length = np.shape(parameters_1)[1]
@@ -55,7 +64,8 @@ def phazap_plot(event_name_1,event_name_2,fbest=40.0,fhigh=100.0,flow=20.0,dir_p
                  r'\tau_\mathrm{HV}']
 
     label_1 = event_name_1
-    label_2 = event_name_2+' (shifted by $%s\pi$)' % np.round(phase_shifts[np.argmin(dist)]/np.pi,1)
+    best_phase_shift = utils.format_pretty_phase_shift(phase_shifts[np.argmin(dist)]).replace('0', '0pi').replace('pi', '\pi')
+    label_2 = fr"{event_name_2} (shifted by ${best_phase_shift}$)"
 
     color_1 = 'blue'
     color_2 = 'green'
@@ -82,7 +92,13 @@ def phazap_plot(event_name_1,event_name_2,fbest=40.0,fhigh=100.0,flow=20.0,dir_p
 
     plt.suptitle(r'Minimum distance =%s' % np.round(np.min(dist),2)+r', volume = %s' % np.round(np.min(vol_phases_1),2), va='bottom')
 
-    plt.savefig(dir_out+'phazap_'+event_name_1+'_'+event_name_2+'_fbest_%s_fhigh_%s_flow_%s.pdf' % (int(fbest),int(fhigh),int(flow)), bbox_inches='tight', transparent=True)
+    if output_filename is None:
+        output_filename = _default_plot_filename_str.format(
+            event_name_1,
+            event_name_2,
+            event1_postprocessed_phase.fbest,
+            event1_postprocessed_phase.fhigh,
+            event1_postprocessed_phase.flow,
+        )
 
-
-    return print(event_name_1,event_name_2,' plot done!')
+    plt.savefig(os.path.join(output_dir, output_filename), bbox_inches='tight', transparent=True)
