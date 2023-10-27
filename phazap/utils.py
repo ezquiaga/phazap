@@ -12,6 +12,18 @@ def format_pretty_phase_shift(phase_shift):
     }
     return conversion_chart[prefactor]
 
+""" Compute p-value """
+from scipy.stats import chi2
+from scipy.interpolate import interp1d
+
+@np.vectorize
+def p_sigma(dist,df):
+    ps = np.logspace(-15,0,10000)
+    #df = 1
+    chi2s = chi2.isf(ps,df)
+    p = interp1d(np.sqrt(chi2s),ps, bounds_error=False, fill_value=min(ps))
+    return 1 - p(dist)
+
 """ Compute mode """
 
 #1D Maximum likelihood value from posterior samples

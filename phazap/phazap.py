@@ -2,6 +2,7 @@ import numpy as np
 import os
 
 from . import gwphase
+from . import utils
 from . import gw_utils as gwutils
 from . import tension_utils as tension
 from .postprocess_phase import postprocess_phase, PostprocessedPhase, _variables_event_1, _variables_event_2
@@ -189,15 +190,17 @@ def phazap_one_ordering(event1_postprocessed_phase, event2_postprocessed_phase):
     else:
         dist_all = tension.distance_phases_with_shift(parameters_1,parameters_2,nphases)
 
-    #ADD NEFF
+    #Compute neff
+    prior_range = np.pi/2
+    neff = tension.n_eff_pair(det_phases_1,det_phases_2,nphases,prior_range)
 
-    return vol_phases_1, dist_all
+    return vol_phases_1, dist_all, neff
 
 
 def _phazap(event1_postprocessed_phase, event2_postprocessed_phase):
     #Compute volumes and distances for both orderings
-    vol_phases_12, dist_12 = phazap_one_ordering(event1_postprocessed_phase, event2_postprocessed_phase)
-    vol_phases_21, dist_21 = phazap_one_ordering(event2_postprocessed_phase, event1_postprocessed_phase)
+    vol_phases_12, dist_12, neff_12 = phazap_one_ordering(event1_postprocessed_phase, event2_postprocessed_phase)
+    vol_phases_21, dist_21, neff_21 = phazap_one_ordering(event2_postprocessed_phase, event1_postprocessed_phase)
 
     dist_21_swap = np.array([dist_21[0],dist_21[3],dist_21[4],dist_21[1],dist_21[2]])
     D_J_n = np.maximum(dist_12,dist_21_swap)
@@ -209,7 +212,9 @@ def _phazap(event1_postprocessed_phase, event2_postprocessed_phase):
     phase_shifts = np.array([0,1,2,-1,-2])*np.pi/2
     phase_shift = phase_shifts[np.argmin(D_J_n)]
 
-    #ADD P-VALUE
+    #Compute p-value
+    neff = neff_12 if D_J in dist_12 else neff_21
+    p_value = utils.p_sigma(D_J, neff+3)
 
     return D_J, vol_J, phase_shift, D_J_n
 
