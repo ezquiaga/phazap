@@ -213,7 +213,7 @@ def _phazap(event1_postprocessed_phase, event2_postprocessed_phase):
 
     return D_J, vol_J, phase_shift, D_J_n
 
-def phazap(event_1, event_2):
+def phazap(event_1, event_2, plot=False, output_dir="./", output_filename=None):
     def check_if_postprocessed(x):
         if type(x) is PostprocessedPhase:
             # x is indeed a PostprocessedPhase object, return it directly
@@ -236,9 +236,13 @@ def phazap(event_1, event_2):
     postprocessed_phase_1 = check_if_postprocessed(event_1)
     postprocessed_phase_2 = check_if_postprocessed(event_2)
 
+    if plot:
+        from .plot_utils import phazap_plot
+        phazap_plot(postprocessed_phase_1, postprocessed_phase_2, output_dir=output_dir, output_filename=output_filename)
+
     return _phazap(postprocessed_phase_1, postprocessed_phase_2)
 
-def phazap_summary(event_1, event_2):
-    D_J, vol_J, phase_shift, D_J_n = phazap(event_1, event_2)
+def phazap_summary(event_1, event_2, plot=False, output_dir="./", output_filename=None):
+    D_J, vol_J, phase_shift, D_J_n = phazap(event_1, event_2, plot=plot, output_dir=output_dir, output_filename=output_filename)
 
     return D_J, vol_J, phase_shift
