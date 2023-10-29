@@ -1,6 +1,6 @@
 import setuptools
 
-verstr = "0.1.0"
+verstr = "0.2.0"
 
 setuptools.setup(
     name="phazap",
