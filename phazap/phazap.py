@@ -216,7 +216,7 @@ def _phazap(event1_postprocessed_phase, event2_postprocessed_phase):
     neff = neff_12 if D_J in dist_12 else neff_21
     p_value = utils.p_sigma(D_J, neff+3)
 
-    return D_J, vol_J, phase_shift, D_J_n
+    return D_J, vol_J, phase_shift, D_J_n, p_value
 
 def phazap(event_1, event_2, plot=False, output_dir="./", output_filename=None):
     def check_if_postprocessed(x):
@@ -248,6 +248,6 @@ def phazap(event_1, event_2, plot=False, output_dir="./", output_filename=None):
     return _phazap(postprocessed_phase_1, postprocessed_phase_2)
 
 def phazap_summary(event_1, event_2, plot=False, output_dir="./", output_filename=None):
-    D_J, vol_J, phase_shift, D_J_n = phazap(event_1, event_2, plot=plot, output_dir=output_dir, output_filename=output_filename)
+    D_J, vol_J, phase_shift, D_J_n, p_value = phazap(event_1, event_2, plot=plot, output_dir=output_dir, output_filename=output_filename)
 
-    return D_J, vol_J, phase_shift
+    return D_J, vol_J, phase_shift, p_value

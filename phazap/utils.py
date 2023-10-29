@@ -16,7 +16,6 @@ def format_pretty_phase_shift(phase_shift):
 from scipy.stats import chi2
 from scipy.interpolate import interp1d
 
-@np.vectorize
 def p_sigma(dist,df):
     ps = np.logspace(-15,0,10000)
     #df = 1
