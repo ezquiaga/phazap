@@ -46,7 +46,7 @@ def phazap_plot(event1_postprocessed_phase, event2_postprocessed_phase, output_d
 
     dist = dist_all
 
-    phase_shifts = np.array([0,1,2,-1,-2])*np.pi/2
+    phase_shifts = np.array([0,1,2,-1])*np.pi/2
     phase_shift = phase_shifts[np.argmin(dist)]*np.hstack((np.ones(nphases),np.zeros(length-nphases)))
 
     #Event 2 is shifted by the phase shift that minimizes the distance

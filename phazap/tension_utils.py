@@ -47,7 +47,7 @@ def distance_phases(parameters_1,parameters_2,nphases):
 
 def distance_phases_with_shift(parameters_1,parameters_2,nphases):
     #Add possible lensing phase shifts
-    phase_shifts = np.array([0,1,2,-1,-2])*np.pi/2
+    phase_shifts = np.array([0,1,2,-1])*np.pi/2
     distances = 0.*phase_shifts
     
     #Loop around phase shifts
@@ -71,7 +71,7 @@ def distance_only_phases(phases_1,phases_2):
 
 def distance_only_phases_with_shift(parameters_1,parameters_2):
     #Add possible lensing phase shift
-    phase_shifts = np.array([0,1,2,-1,-2])*np.pi/2
+    phase_shifts = np.array([0,1,2,-1])*np.pi/2
     distances = 0.*phase_shifts
     
     length = np.shape(parameters_1)[1]

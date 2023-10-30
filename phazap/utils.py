@@ -2,13 +2,14 @@ import numpy as np
 
 def format_pretty_phase_shift(phase_shift):
     # phase_shift can only be multiple of pi/2
+    # NOTE In newer versions of phazap we do not explicitly compute -pi phase shift
     prefactor = int(phase_shift/np.pi * 2) # This should be an integer
     conversion_chart = {
         0: "0",
-        1: "+pi/2",
-        2: "+pi",
-        -1: "-pi/2",
-        -2: "-pi",
+        1: "+π/2",
+        2: "±π",
+        -1: "-π/2",
+        -2: "-π",
     }
     return conversion_chart[prefactor]
 
