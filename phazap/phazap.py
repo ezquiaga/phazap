@@ -202,14 +202,19 @@ def _phazap(event1_postprocessed_phase, event2_postprocessed_phase):
     vol_phases_12, dist_12, neff_12 = phazap_one_ordering(event1_postprocessed_phase, event2_postprocessed_phase)
     vol_phases_21, dist_21, neff_21 = phazap_one_ordering(event2_postprocessed_phase, event1_postprocessed_phase)
 
-    dist_21_swap = np.array([dist_21[0],dist_21[3],dist_21[4],dist_21[1],dist_21[2]])
+    """
+    dist_12 is [0, +pi/2, +pi, -pi/2]
+    this should corresponds to dist_21 of
+    [0, -pi/2, +pi, +pi/2]
+    """
+    dist_21_swap = np.array([dist_21[0],dist_21[3],dist_21[2],dist_21[1]])
     D_J_n = np.maximum(dist_12,dist_21_swap)
     D_J = np.min(D_J_n)
     
     vol_J = vol_phases_12 + vol_phases_21
 
     #Phase shift
-    phase_shifts = np.array([0,1,2,-1,-2])*np.pi/2
+    phase_shifts = np.array([0,1,2,-1])*np.pi/2
     phase_shift = phase_shifts[np.argmin(D_J_n)]
 
     #Compute p-value

@@ -46,7 +46,7 @@ def phazap_plot(event1_postprocessed_phase, event2_postprocessed_phase, output_d
 
     dist = dist_all
 
-    phase_shifts = np.array([0,1,2,-1,-2])*np.pi/2
+    phase_shifts = np.array([0,1,2,-1])*np.pi/2
     phase_shift = phase_shifts[np.argmin(dist)]*np.hstack((np.ones(nphases),np.zeros(length-nphases)))
 
     #Event 2 is shifted by the phase shift that minimizes the distance
@@ -56,15 +56,17 @@ def phazap_plot(event1_postprocessed_phase, event2_postprocessed_phase, output_d
     parameters_1_wrap, parameters_2_wrap = utils.wrap_phases(parameters_1,parameters_2_shifted,nphases)
 
     #labels
-    labels = [r'\phi_\mathrm{H}',
-              r'\phi_\mathrm{L}',
-              r'\phi_\mathrm{V}',
-              r'\Delta\phi_f',
-             r'\tau_\mathrm{HL}',
-                 r'\tau_\mathrm{HV}']
+    labels = [
+        r'\phi_\mathrm{H}',
+        r'\phi_\mathrm{L}',
+        r'\phi_\mathrm{V}',
+        r'\Delta\phi_f',
+        r'\tau_\mathrm{HL}',
+        r'\tau_\mathrm{HV}',
+    ]
 
     label_1 = event_name_1
-    best_phase_shift = utils.format_pretty_phase_shift(phase_shifts[np.argmin(dist)]).replace('0', '0pi').replace('pi', '\pi')
+    best_phase_shift = utils.format_pretty_phase_shift(phase_shifts[np.argmin(dist)]).replace('0', '0π').replace('π', '\pi').replace('±', '\pm')
     label_2 = fr"{event_name_2} (shifted by ${best_phase_shift}$)"
 
     color_1 = 'blue'
@@ -90,7 +92,7 @@ def phazap_plot(event1_postprocessed_phase, event2_postprocessed_phase, output_d
                     colors = [color_1, color_2],
                    line_args = [{'color':color_1},{'color':color_2}])
 
-    plt.suptitle(r'Minimum distance =%s' % np.round(np.min(dist),2)+r', volume = %s' % np.round(np.min(vol_phases_1),2), va='bottom')
+    plt.suptitle(r'Minimum distance = %s' % np.round(np.min(dist),2)+r', volume = %s' % np.round(np.min(vol_phases_1),2), va='bottom')
 
     if output_filename is None:
         output_filename = _default_plot_filename_str.format(
