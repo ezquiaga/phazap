@@ -104,3 +104,5 @@ def phazap_plot(event1_postprocessed_phase, event2_postprocessed_phase, output_d
         )
 
     plt.savefig(os.path.join(output_dir, output_filename), bbox_inches='tight', transparent=True)
+
+    return plt.gcf()
