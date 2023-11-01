@@ -6,6 +6,10 @@
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
+import os
+import sys
+sys.path.insert(0, os.path.abspath("../phazap"))
+
 project = 'phazap'
 copyright = '2023, Jose María Ezquiaga'
 author = 'Jose María Ezquiaga'
@@ -20,7 +24,6 @@ extensions = [
     'sphinx.ext.todo',
     'sphinx.ext.viewcode',
     'sphinx.ext.autodoc',
-    'sphinx.ext.autosummary',
 ]
 
 templates_path = ['_templates']
