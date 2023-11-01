@@ -8,6 +8,38 @@ from . import tension_utils as tension
 from .postprocess_phase import postprocess_phase, PostprocessedPhase, _variables_event_1, _variables_event_2
 
 def phases_events(event1_postprocessed_phase, event2_postprocessed_phase):
+    """
+    Compute the phases of the two events
+
+    Parameters
+    ----------
+    event1_postprocessed_phase : PostprocessedPhase
+        The first event
+    event2_postprocessed_phase : PostprocessedPhase
+        The second event
+
+    Returns
+    -------
+    parameters_1 : np.ndarray
+        The parameters of the first event
+    parameters_2 : np.ndarray
+        The parameters of the second event
+    det_phases_1 : np.ndarray
+        The detector phases of the first event
+    det_phases_2 : np.ndarray
+        The detector phases of the second event
+    tau_phases_1 : np.ndarray
+        The time delay phases of the first event
+    tau_phases_2 : np.ndarray
+        The time delay phases of the second event
+    Dphi_f_1 : np.ndarray
+        The Dphi_f of the first event
+    Dphi_f_2 : np.ndarray
+        The Dphi_f of the second event
+    above_below : np.ndarray
+        The above_below of the second event
+
+    """
     assert event1_postprocessed_phase.fbest == event2_postprocessed_phase.fbest, "The two sets of phases have different fbest"
     fbest = event1_postprocessed_phase.fbest # Either one should be fine
     assert event1_postprocessed_phase.flow == event2_postprocessed_phase.flow, "The two sets of phases have different flow"
