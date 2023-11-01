@@ -256,6 +256,36 @@ def _phazap(event1_postprocessed_phase, event2_postprocessed_phase):
     return D_J, vol_J, phase_shift, D_J_n, p_value
 
 def phazap(event_1, event_2, plot=False, output_dir="./", output_filename=None):
+    """
+    Write docstring here
+
+    Parameters
+    ----------
+    event_1 : str or PostprocessedPhase
+        The first event
+    event_2 : str or PostprocessedPhase
+        The second event
+    plot : bool, optional
+        Whether to plot the results, by default False
+    output_dir : str, optional
+        The output directory, by default "./"
+    output_filename : str, optional
+        The output filename, by default None
+
+    Returns
+    -------
+    D_J : float
+        The D_J statistic
+    vol_J : float
+        The vol_J statistic
+    phase_shift : float
+        The phase shift
+    D_J_n : np.ndarray
+        The D_J_n statistic
+    p_value : float
+        The p-value
+    
+    """
     def check_if_postprocessed(x):
         if type(x) is PostprocessedPhase:
             # x is indeed a PostprocessedPhase object, return it directly
@@ -285,6 +315,34 @@ def phazap(event_1, event_2, plot=False, output_dir="./", output_filename=None):
     return _phazap(postprocessed_phase_1, postprocessed_phase_2)
 
 def phazap_summary(event_1, event_2, plot=False, output_dir="./", output_filename=None):
+    """
+    docstring
+
+    Parameters
+    ----------
+    event_1 : str or PostprocessedPhase
+        The first event
+    event_2 : str or PostprocessedPhase
+        The second event
+    plot : bool, optional
+        Whether to plot the results, by default False
+    output_dir : str, optional
+        The output directory, by default "./"
+    output_filename : str, optional
+        The output filename, by default None
+    
+    Returns
+    -------
+    D_J : float
+        The D_J statistic
+    vol_J : float
+        The vol_J statistic
+    phase_shift : float
+        The phase shift
+    p_value : float
+        The p-value
+
+    """
     D_J, vol_J, phase_shift, D_J_n, p_value = phazap(event_1, event_2, plot=plot, output_dir=output_dir, output_filename=output_filename)
 
     return D_J, vol_J, phase_shift, p_value

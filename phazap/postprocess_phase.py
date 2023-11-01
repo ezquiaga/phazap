@@ -46,6 +46,30 @@ class PostprocessedPhase:
         superevent_name=None,
         label=None,
     ):
+        """
+        A class to store the postprocessed phase
+
+        Parameters
+        ----------
+        dataset: dict
+            A dictionary containing the postprocessed phase data
+        flow: float
+            Lower frequency cutoff
+        fhigh: float
+            Upper frequency cutoff
+        fbest: float
+            Frequency at which the phase is best measured
+        superevent_name: str
+            Name of the superevent
+        label: str
+            Label for the postprocessed phase
+
+        Returns
+        -------
+        PostprocessedPhase
+            An instance of PostprocessedPhase class
+
+        """
         # Make a list of variables that should exist in dataset
         variables = set([*_variables_event_1, *_variables_event_2])
         missing_keys = [p for p in dataset.keys() if p not in variables]
@@ -60,6 +84,20 @@ class PostprocessedPhase:
 
     @classmethod
     def from_file(cls, hdf5_file):
+        """
+        Load the postprocessed phase from a hdf5 file
+
+        Parameters
+        ----------
+        hdf5_file: str
+            Path to the hdf5 file
+
+        Returns
+        -------
+        PostprocessedPhase
+            An instance of PostprocessedPhase class
+        
+        """
         with h5py.File(hdf5_file, "r") as f:
             dataset = {p: np.array(f[p]) for p in [*_variables_event_1, *_variables_event_2]}
 
@@ -93,10 +131,32 @@ def postprocess_phase(
         output_filename=None,
     ):
     """
-    #sname is the superevent name
-    #fbest is the pivotal frequency
-    #fhigh is the high frequency for the phase evolution
-    #flow is the low frequency for the phase evolution
+    Postprocess the phase of the GW signal
+
+    Parameters
+    ----------
+    pe_result: str or ParameterEstimationInput
+        Path to the bilby result file or an instance of ParameterEstimationInput
+    flow: float
+        Lower frequency cutoff
+    fhigh: float
+        Upper frequency cutoff
+    fbest: float
+        Frequency at which the phase is best measured
+    superevent_name: str
+        Name of the superevent
+    label: str
+        Label for the postprocessed phase
+    output_dir: str
+        Path to the output directory
+    output_filename: str
+        Name of the output file
+
+    Returns
+    -------
+    PostprocessedPhase
+        An instance of PostprocessedPhase class
+
     """
 
     if type(pe_result) is ParameterEstimationInput:

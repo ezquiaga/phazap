@@ -29,6 +29,30 @@ class ParameterEstimationInput():
         waveform_approximant,
         ifo_list,
     ):
+        """
+        A class to store the input for parameter estimation
+
+        Parameters
+        ----------
+        posterior_samples: dict
+            A dictionary of posterior samples
+        reference_frequency: float
+            Reference frequency
+        sampling_frequency: float
+            Sampling frequency
+        duration: float
+            Duration
+        waveform_approximant: str
+            Waveform approximant
+        ifo_list: list
+            List of interferometers
+
+        Returns
+        -------
+        ParameterEstimationInput
+            The ParameterEstimationInput instance
+
+        """
         self.posterior_samples = posterior_samples
         self.reference_frequency = reference_frequency
         self.sampling_frequency = sampling_frequency
@@ -38,6 +62,20 @@ class ParameterEstimationInput():
         
     @classmethod
     def from_bilby_result_file(cls, result_file):
+        """
+        Load the parameter estimation input from a bilby result file
+
+        Parameters
+        ----------
+        result_file: str
+            Path to the result file
+        
+        Returns
+        -------
+        ParameterEstimationInput
+            The ParameterEstimationInput instance
+        
+        """
         import bilby
         import bilby_pipe
         r = bilby.result.read_in_result(result_file)
@@ -66,6 +104,20 @@ class ParameterEstimationInput():
 
     @classmethod
     def from_PESummary_file(cls, hdf5_file):
+        """
+        Load the parameter estimation input from a PESummary hdf5 file
+
+        Parameters
+        ----------
+        hdf5_file: str
+            Path to the PESummary file
+        
+        Returns
+        -------
+        ParameterEstimationInput
+            The ParameterEstimationInput instance
+
+        """
         # TODO: Re-write the whole thing to actually NOT use PESummary because it is just SLOW
         from pesummary.io import read
         r = read(hdf5_file, package="gw")
