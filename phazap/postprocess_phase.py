@@ -136,7 +136,7 @@ def postprocess_phase(
     Parameters
     ----------
     pe_result: str or ParameterEstimationInput
-        Path to the bilby result file or an instance of ParameterEstimationInput
+        Path to the bilby result/PESummary file or an instance of ParameterEstimationInput
     flow: float
         Lower frequency cutoff
     fhigh: float
