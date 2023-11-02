@@ -1,5 +1,5 @@
-Usage
-=====
+Main API
+========
 
 .. autofunction:: phazap.phazap
 

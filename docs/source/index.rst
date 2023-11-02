@@ -15,6 +15,7 @@ are presented in `Ezquiaga, Hu, Lo (2023) <https://arxiv.org/abs/2308.06616>`_.
    :maxdepth: 2
    :caption: Contents:
 
-   usage
-   api
+   examples
+   main_api
+   full_api
 
