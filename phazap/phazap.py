@@ -8,6 +8,39 @@ from . import tension_utils as tension
 from .postprocess_phase import postprocess_phase, PostprocessedPhase, _variables_event_1, _variables_event_2
 
 def phases_events(event1_postprocessed_phase, event2_postprocessed_phase):
+    """
+    Compute the detector, time-delay and :math:`\Delta\phi_f` phases of the two events
+
+    Parameters
+    ----------
+    event1_postprocessed_phase : PostprocessedPhase
+        The first event
+    event2_postprocessed_phase : PostprocessedPhase
+        The second event
+
+    Returns
+    -------
+    parameters_1 : np.ndarray
+        The parameters (det_phase, tau_phase, Dphi_f) of the first event
+    parameters_2 : np.ndarray
+        The parameters (det_phase, tau_phase, Dphi_f) of the second event
+    det_phases_1 : np.ndarray
+        The detector phases of the first event
+    det_phases_2 : np.ndarray
+        The detector phases of the second event
+    tau_phases_1 : np.ndarray
+        The time delay phases of the first event
+    tau_phases_2 : np.ndarray
+        The time delay phases of the second event
+    Dphi_f_1 : np.ndarray
+        The :math:`\Delta\phi_f` of the first event
+    Dphi_f_2 : np.ndarray
+        The :math:`\Delta\phi_f` of the second event
+    above_below : np.ndarray
+        The dot product of :math:`\\vec{n}` with :math:`\\vec{r}_{d_1 d_2} \\times \\vec{r}_{d_1 d_3}` the second event
+        where its sign indicates whether the source is above or below the plane of the detectors
+
+    """
     assert event1_postprocessed_phase.fbest == event2_postprocessed_phase.fbest, "The two sets of phases have different fbest"
     fbest = event1_postprocessed_phase.fbest # Either one should be fine
     assert event1_postprocessed_phase.flow == event2_postprocessed_phase.flow, "The two sets of phases have different flow"
@@ -129,6 +162,38 @@ def phases_events(event1_postprocessed_phase, event2_postprocessed_phase):
     return parameters_1, parameters_2, det_phases_1, det_phases_2, tau_phases_1, tau_phases_2, Dphi_f_1, Dphi_f_2, above_below
 
 def phazap_all_metrics_one_ordering(event1_postprocessed_phase, event2_postprocessed_phase):
+    """
+    Compute all metrics for one ordering of the two events
+
+    Parameters
+    ----------
+    event1_postprocessed_phase : PostprocessedPhase
+        The first event
+    event2_postprocessed_phase : PostprocessedPhase
+        The second event
+
+    Returns
+    -------
+    neff : float
+        The number of effective phases
+    vol_1 : float
+        The volume of the posterior distribution of the first event, considering all phases
+    vol_2 : float
+        The volume of the posterior distribution of the second event, considering all phases
+    vol_phases_1 : float
+        The volume of the posterior distribution of the first event, only considering the detector phases
+    vol_phases_2 : float
+        The volume of the posterior distribution of the second event, only considering the detector phases
+    dist_all : float
+        The distance of the posterior distribution between the two events, considering all phases
+    dist_phases : float
+        The distance of the posterior distribution between the two events, only considering the detector phases
+    dist_Tphases : float
+        The distance of the posterior distribution between the two events, only considering the time delay phases
+    dist_Dphi : float
+        The distance of the posterior distribution between the two events, only considering :math:`\Delta\phi_f`
+    
+    """
     parameters_1, parameters_2, det_phases_1, det_phases_2, tau_phases_1, tau_phases_2, Dphi_f_1, Dphi_f_2, above_below = phases_events(event1_postprocessed_phase, event2_postprocessed_phase)
 
     nphases = 3
@@ -170,7 +235,26 @@ def phazap_all_metrics_one_ordering(event1_postprocessed_phase, event2_postproce
     return neff, vol_1, vol_2, vol_phases_1, vol_phases_2, dist_all, dist_phases, dist_Tphases, dist_Dphi
 
 def phazap_one_ordering(event1_postprocessed_phase, event2_postprocessed_phase):
+    """
+    Compute the volume, distance and number of effective phases for one ordering of the two events
 
+    Parameters
+    ----------
+    event1_postprocessed_phase : PostprocessedPhase
+        The first event
+    event2_postprocessed_phase : PostprocessedPhase
+        The second event
+
+    Returns
+    -------
+    vol_phases_1 : float
+        The volume of the posterior distribution of the first event, only considering the detector phases
+    dist_all : float
+        The distance of the posterior distribution between the two events, considering all phases
+    neff : float
+        The number of effective phases
+    
+    """
     parameters_1, parameters_2, det_phases_1, det_phases_2, tau_phases_1, tau_phases_2, Dphi_f_1, Dphi_f_2, above_below = phases_events(event1_postprocessed_phase, event2_postprocessed_phase)
 
     nphases = 3
@@ -198,6 +282,30 @@ def phazap_one_ordering(event1_postprocessed_phase, event2_postprocessed_phase):
 
 
 def _phazap(event1_postprocessed_phase, event2_postprocessed_phase):
+    """
+    Compute the :math:`D_J` statistic, the :math:`V_J` statistic, the phase shift, and the :math:`p`-value
+
+    Parameters
+    ----------
+    event1_postprocessed_phase : PostprocessedPhase
+        The first event
+    event2_postprocessed_phase : PostprocessedPhase
+        The second event
+    
+    Returns
+    -------
+    D_J : float
+        The :math:`D_J` statistic
+    vol_J : float
+        The :math:`V_J` statistic
+    phase_shift : float
+        The phase shift
+    D_J_n : np.ndarray
+        The :math:`D_J` statistic for each possible phase shift
+    p_value : float
+        The :math:`p`-value
+
+    """
     #Compute volumes and distances for both orderings
     vol_phases_12, dist_12, neff_12 = phazap_one_ordering(event1_postprocessed_phase, event2_postprocessed_phase)
     vol_phases_21, dist_21, neff_21 = phazap_one_ordering(event2_postprocessed_phase, event1_postprocessed_phase)
@@ -224,6 +332,38 @@ def _phazap(event1_postprocessed_phase, event2_postprocessed_phase):
     return D_J, vol_J, phase_shift, D_J_n, p_value
 
 def phazap(event_1, event_2, plot=False, output_dir="./", output_filename=None):
+    """
+    Compute the :math:`D_J` statistic, the :math:`V_J` statistic, the phase shift, and the :math:`p`-value
+
+    Parameters
+    ----------
+    event_1 : str or PostprocessedPhase
+        The first event. If it is a string, it should be a file path to 
+        either a postprocessed phase file or a PE result file
+    event_2 : str or PostprocessedPhase
+        The second event. If it is a string, it should be a file path to
+        either a postprocessed phase file or a PE result file
+    plot : bool, optional
+        Whether to plot the results, by default False
+    output_dir : str, optional
+        The output directory, by default "./"
+    output_filename : str, optional
+        The output filename, by default None
+
+    Returns
+    -------
+    D_J : float
+        The :math:`D_J` statistic
+    vol_J : float
+        The :math:`V_J` statistic
+    phase_shift : float
+        The phase shift
+    D_J_n : np.ndarray
+        The :math:`D_J` statistic for each possible phase shift
+    p_value : float
+        The :math:`p`-value
+    
+    """
     def check_if_postprocessed(x):
         if type(x) is PostprocessedPhase:
             # x is indeed a PostprocessedPhase object, return it directly
@@ -253,6 +393,36 @@ def phazap(event_1, event_2, plot=False, output_dir="./", output_filename=None):
     return _phazap(postprocessed_phase_1, postprocessed_phase_2)
 
 def phazap_summary(event_1, event_2, plot=False, output_dir="./", output_filename=None):
+    """
+    Compute the :math:`D_J` statistic, the :math:`V_J` statistic, the phase shift, and the :math:`p`-value
+
+    Parameters
+    ----------
+    event_1 : str or PostprocessedPhase
+        The first event. If it is a string, it should be a file path to
+        either a postprocessed phase file or a PE result file
+    event_2 : str or PostprocessedPhase
+        The second event. If it is a string, it should be a file path to
+        either a postprocessed phase file or a PE result file
+    plot : bool, optional
+        Whether to plot the results, by default False
+    output_dir : str, optional
+        The output directory, by default "./"
+    output_filename : str, optional
+        The output filename, by default None
+    
+    Returns
+    -------
+    D_J : float
+        The :math:`D_J` statistic
+    vol_J : float
+        The :math:`V_J` statistic
+    phase_shift : float
+        The phase shift
+    p_value : float
+        The :math:`p`-value
+
+    """
     D_J, vol_J, phase_shift, D_J_n, p_value = phazap(event_1, event_2, plot=plot, output_dir=output_dir, output_filename=output_filename)
 
     return D_J, vol_J, phase_shift, p_value

@@ -65,13 +65,41 @@ def tau_12(ra,dec,gpstime,d1,d2,f):
 
 """Basic transformations"""
 def mchirp(m1,m2):
-    #m1: mass 1
-    #m2: mass 2
+    """
+    Compute chirp mass from component masses
+
+    Parameters
+    ----------
+    m1 : float
+        Mass 1
+    m2 : float
+        Mass 2
+
+    Returns
+    -------
+    float
+        Chirp mass
+
+    """
     return np.power(m1*m2,3./5.)/np.power(m1+m2,1./5.)
 
 def symmetric_massratio(m1,m2):
-    #m1: mass 1
-    #m2: mass 2
+    """
+    Compute symmetric mass ratio from component masses
+
+    Parameters
+    ----------
+    m1 : float
+        Mass 1
+    m2 : float
+        Mass 2
+
+    Returns
+    -------
+    float
+        Symmetric mass ratio
+
+    """
     return np.minimum((m1 * m2) / (m1 + m2) ** 2, 1 / 4)
 
 """Generate waveform"""
