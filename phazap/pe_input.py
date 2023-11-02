@@ -37,7 +37,7 @@ class ParameterEstimationInput():
         posterior_samples: dict
             A dictionary of posterior samples
         reference_frequency: float
-            Reference frequency
+            Reference frequency chosen for this set of samples
         sampling_frequency: float
             Sampling frequency
         duration: float

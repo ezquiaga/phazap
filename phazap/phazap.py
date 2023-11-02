@@ -301,7 +301,7 @@ def _phazap(event1_postprocessed_phase, event2_postprocessed_phase):
     phase_shift : float
         The phase shift
     D_J_n : np.ndarray
-        The :math:`D_J` statistic for each possible phase shift
+        The :math:`D_J` statistic for each allowed phase shift
     p_value : float
         The :math:`p`-value
 
@@ -359,7 +359,7 @@ def phazap(event_1, event_2, plot=False, output_dir="./", output_filename=None):
     phase_shift : float
         The phase shift
     D_J_n : np.ndarray
-        The :math:`D_J` statistic for each possible phase shift
+        The :math:`D_J` statistic for each allowed phase shift
     p_value : float
         The :math:`p`-value
     

@@ -54,9 +54,9 @@ class PostprocessedPhase:
         dataset: dict
             A dictionary containing the postprocessed phase data
         flow: float
-            Lower frequency cutoff
+            Lower frequency cutoff for computing :math:`\Delta \phi_f`
         fhigh: float
-            Upper frequency cutoff
+            Upper frequency cutoff for computing :math:`\Delta \phi_f`
         fbest: float
             Frequency at which the phase is best measured
         superevent_name: str
@@ -138,9 +138,9 @@ def postprocess_phase(
     pe_result: str or ParameterEstimationInput
         Path to the bilby result/PESummary file or an instance of ParameterEstimationInput
     flow: float
-        Lower frequency cutoff
+        Lower frequency cutoff for computing :math:`\Delta \phi_f`
     fhigh: float
-        Upper frequency cutoff
+        Upper frequency cutoff for computing :math:`\Delta \phi_f`
     fbest: float
         Frequency at which the phase is best measured
     superevent_name: str
