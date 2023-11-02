@@ -1,12 +1,12 @@
 First, we import the two main functions of the package,
-``phazap`` and ``postprocess_phase``.
+:ref:`phazap() <phazap_api>` and :ref:`postprocess_phase() <postprocess_phase_api>`.
 
 .. code:: ipython3
 
     from phazap import phazap, postprocess_phase
 
 
-We invoke the function ``postprocess_phase`` to compute all the relevant 
+We invoke the function :ref:`postprocess_phase() <postprocess_phase_api>` to compute all the relevant 
 phases from the set of posterior samples associated to the first event of the pair 
 
 .. code:: ipython3
@@ -32,7 +32,7 @@ phases from the set of posterior samples associated to the first event of the pa
 
 
 Then we do the same for the second event of the pair. Notice that the function
-``postprocess_phase`` can handle both json and hdf5 files as input.
+:ref:`postprocess_phase() <postprocess_phase_api>` can handle both json and hdf5 files as input.
 
 .. code:: ipython3
 
@@ -56,9 +56,9 @@ Then we do the same for the second event of the pair. Notice that the function
     03:31 phazap INFO    : Postprocessing completed and saved to ./phases_event_2_fbest_40.0_fhigh_100.0_flow_20.0.hdf5
 
 
-Once we have postprocessed both events, we can invoke ``phazap`` to compute
+Once we have postprocessed both events, we can invoke :ref:`phazap() <phazap_api>` to compute
 the :math:`D_J` statistic (the first output) and the associated :math:`p`-value (the fifth output) of the pair with
-a specific phase shift (the third output).
+a specific phase shift (the third output). Refer to the documentation of :ref:`phazap() <phazap_api>` for more details.
 
 .. code:: ipython3
 
@@ -78,7 +78,7 @@ a distance :math:`D_J \approx 0.597\sigma` and a :math:`p`-value of :math:`0.000
 Therefore, according to our analysis, this pair is consistent with being a pair of 
 type-I-type-II lensed GW signals.
 
-We can also make a plot visualizing the result with ``phazap.plot_utils.phazap_plot``
+We can also make a plot visualizing the result with ``phazap.plot_utils.phazap_plot()``
 
 .. code:: ipython3
 
