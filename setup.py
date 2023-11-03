@@ -16,8 +16,9 @@ setuptools.setup(
     version=verstr,
     author="Jose María Ezquiaga",
     author_email="jose.ezquiaga@nbi.ku.dk",
-    description="a package to identify strongly lensed gravitational wave signals rapidly",
-    long_description="Gravitational wave phase reconstruction for low-latency identification of strongly lensed signals",
+    description="Gravitational wave phase reconstruction for low-latency identification of strongly lensed signals",
+    long_description=open('README.md').read(),
+    long_description_content_type='text/markdown',
     packages=[
         "phazap",
     ],
