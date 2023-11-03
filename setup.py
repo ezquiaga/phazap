@@ -1,4 +1,5 @@
 import setuptools
+from pathlib import Path
 
 import re
 VERSIONFILE="phazap/_version.py"
@@ -17,8 +18,8 @@ setuptools.setup(
     author="Jose María Ezquiaga",
     author_email="jose.ezquiaga@nbi.ku.dk",
     description="Gravitational wave phase reconstruction for low-latency identification of strongly lensed signals",
-    long_description=open('README.md').read(),
-    long_description_content_type='text/markdown',
+    long_description=Path("README.md").read_text(encoding="utf-8"),
+    long_description_content_type="text/markdown",
     packages=[
         "phazap",
     ],
