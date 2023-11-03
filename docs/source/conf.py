@@ -6,14 +6,12 @@
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-import os
-import sys
-sys.path.insert(0, os.path.abspath("../phazap"))
-
 project = 'phazap'
 copyright = '2023, Jose María Ezquiaga'
 author = 'Jose María Ezquiaga'
-release = '0.3.0'
+
+from phazap._version import __version__ as verstr
+release = verstr
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration

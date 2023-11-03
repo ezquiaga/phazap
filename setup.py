@@ -1,6 +1,15 @@
 import setuptools
 
-verstr = "0.3.0"
+import re
+VERSIONFILE="phazap/_version.py"
+verstrline = open(VERSIONFILE, "rt").read()
+VSRE = r"^__version__ = ['\"]([^'\"]*)['\"]"
+mo = re.search(VSRE, verstrline, re.M)
+if mo:
+    verstr = mo.group(1)
+else:
+    raise RuntimeError("Unable to find version string in %s." % (VERSIONFILE,))
+
 
 setuptools.setup(
     name="phazap",
