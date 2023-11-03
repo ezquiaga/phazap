@@ -1,6 +1,8 @@
 # phazap
 
 ![license](https://img.shields.io/github/license/ezquiaga/phazap)
+[![GitHub release](https://img.shields.io/github/v/release/ezquiaga/phazap.svg)](https://github.com/ezquiaga/phazap/releases)
+[![Documentation Status](https://readthedocs.org/projects/phazap/badge/?version=latest)](https://phazap.readthedocs.io/en/latest/?badge=latest)
 
 Phazap is a package to efficiently post-process gravitational-wave (GW) parameter estimation data to obtain the phases and polarization state of the signal at a given detector and frequency. Details on the method are presented in [Ezquiaga, Hu, Lo (2023)](https://arxiv.org/abs/2308.06616). The key module is `phazap.py`.
 
