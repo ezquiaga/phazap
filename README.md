@@ -9,3 +9,19 @@ Phazap is a package to efficiently post-process gravitational-wave (GW) paramete
 This code is used for low-latency identification of strongly lensed gravitational waves via their phase consistency by measuring their distance in the detector phase space. The relevant module including the distance statistic is `tension_utils.py`.
 
 Phazap builds on top of the IGWN conda enviroment https://computing.docs.ligo.org/conda/environments/igwn/ which include the standard GW packages such as LALSuite and bilby.
+
+## Installation
+There are two ways to install the package, either
+### from pypi
+```bash
+$ pip install phazap
+```
+
+### from source
+```bash
+$ git clone https://github.com/ezquiaga/phazap.git
+$ cd phazap
+$ pip install .
+```
+### Quick-start
+Refer to the [documentation](https://phazap.readthedocs.io/en/latest/examples.html) for two illustrative examples
