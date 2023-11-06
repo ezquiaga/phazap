@@ -4,7 +4,22 @@ from . import utils
 """Tension between data sets"""
 
 #Distance between data sets in Gaussian limit
-def distance(parameters_1,parameters_2):    
+def distance(parameters_1,parameters_2):
+    """
+    Compute distance between two sets of parameters.
+
+    Parameters
+    ----------
+    parameters_1 : array_like
+        First set of parameters.
+    parameters_2 : array_like
+        Second set of parameters.
+    
+    Returns
+    -------
+    distance : float
+        Distance between the two sets of parameters.
+    """    
     if len(parameters_1) == 0:
         return 0
     elif np.shape(parameters_1)[1] == 1:
@@ -46,6 +61,23 @@ def distance_phases(parameters_1,parameters_2,nphases):
     return distance(parameters_1_wrap,parameters_2_wrap)
 
 def distance_phases_with_shift(parameters_1,parameters_2,nphases):
+    """
+    Compute distance between two sets of parameters with possible lensing phase shifts.
+
+    Parameters
+    ----------
+    parameters_1 : array_like
+        First set of parameters.
+    parameters_2 : array_like
+        Second set of parameters.
+    nphases : int
+        Number of phases.
+    
+    Returns
+    -------
+    distances : array_like
+        Distances between the two sets of parameters with possible lensing phase shifts.
+    """
     #Add possible lensing phase shifts
     phase_shifts = np.array([0,1,2,-1])*np.pi/2
     distances = 0.*phase_shifts
@@ -86,6 +118,19 @@ def distance_only_phases_with_shift(parameters_1,parameters_2):
 
 #Volume
 def volume(parameters): 
+    """
+    Volume of a set of parameters.
+
+    Parameters
+    ----------
+    parameters : array_like
+        Set of parameters.
+    
+    Returns
+    -------
+    volume : float
+        Volume of the set of parameters.
+    """
     return np.sqrt(np.linalg.det(np.cov(parameters.T)))
 
 def volume_phases(parameters,nphases):
@@ -117,6 +162,26 @@ def volume_only_phases(phases_1,phases_2):
 """Number of effective degrees of freedom"""
 
 def n_eff(phases_1,phases_2,nphases,prior_range):
+    """
+    Compute number of effective degrees of freedom.
+
+    Parameters
+    ----------
+    phases_1 : array_like
+        First set of phases.
+    phases_2 : array_like
+        Second set of phases.
+    nphases : int
+        Number of phases.
+    prior_range : float
+        Prior range.
+
+    Returns
+    -------
+    n_eff : float
+        Number of effective degrees of freedom.
+    """
+
     #Flat prior on the phases
     var_prior = (prior_range**2) / 12
     cov_prior = np.diag(np.ones(nphases))*var_prior
