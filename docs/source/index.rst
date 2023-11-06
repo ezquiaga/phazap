@@ -11,6 +11,23 @@ parameter estimation data to obtain the phases and polarization state of
 the signal at a given detector and frequency. Details on the method
 are presented in `Ezquiaga, Hu, Lo (2023) <https://arxiv.org/abs/2308.06616>`_. 
 
+Installation
+------------
+The package can be installed using pip:
+
+.. code-block:: bash
+
+  pip install phazap
+
+
+or directly from the github repository for the latest features and updates:
+
+.. code-block:: bash
+
+  git clone https://github.com/ezquiaga/phazap.git
+  cd phazap
+  pip install .
+
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
