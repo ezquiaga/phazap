@@ -79,9 +79,9 @@ def phazap_plot(event1_postprocessed_phase, event2_postprocessed_phase, output_d
         r'\phi_\mathrm{H}',
         r'\phi_\mathrm{L}',
         r'\phi_\mathrm{V}',
-        r'\Delta\phi_f',
         r'\tau_\mathrm{HL}',
         r'\tau_\mathrm{HV}',
+        r'\Delta\phi_f',
     ]
 
     label_1 = event_name_1
