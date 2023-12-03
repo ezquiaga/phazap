@@ -60,9 +60,6 @@ def N_dot_d12(ra,dec,gpstime,d1,d2):
     d12 = d1 - d2
     return np.dot(N, d12) / lal.C_SI
 
-def tau_12(ra,dec,gpstime,d1,d2,f):
-    return 2*np.pi*f*N_dot_d12(ra,dec,gpstime,d1,d2)
-
 """Generate waveform"""
 def hp_hx(binary_parameters,waveform_generator):
     generate_h = waveform_generator.frequency_domain_strain(binary_parameters)
