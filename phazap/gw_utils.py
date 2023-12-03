@@ -68,35 +68,3 @@ def hp_hx(binary_parameters,waveform_generator):
     hx = generate_h['cross']
     
     return hp, hx
-
-def hp_hx_freq(binary_parameters,waveform_generator,sampling_frequency,duration):
-    generate_h = waveform_generator.frequency_domain_strain(binary_parameters)
-
-    hp = generate_h['plus']
-    hx = generate_h['cross']
-    
-    fs = bilby.core.utils.series.create_frequency_series(sampling_frequency,duration)
-    
-    return hp, hx, fs 
-
-def strain_at_detector(hp,hx,binary_parameters,detector):
-    Fp, Fx = FpFx(detector,np.array([binary_parameters['ra']]), np.array([binary_parameters['dec']]), np.array([binary_parameters['psi']]), np.array([binary_parameters['geocent_time']]))
-    return hp*Fp + hx*Fx
-
-"""Signal to noise"""
-
-def noise_weighted_inner_product(aa, bb, power_spectral_density, duration):
-    # aa: strain at detector A
-    # bb: strain at detector B
-    # power_spectral_density: power spectral density
-    # duration: duration of the signal
-
-    integrand = np.conj(aa) * bb / power_spectral_density
-    return 4 / duration * np.sum(integrand)
-
-def snr(strain, power_spectral_density, duration):
-    # strain: strain at detector
-    # power_spectral_density: power spectral density
-    # duration: duration of the signal
-    snr2 = noise_weighted_inner_product(strain, strain, power_spectral_density, duration)
-    return np.sqrt(np.real(snr2))
