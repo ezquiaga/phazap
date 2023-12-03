@@ -60,48 +60,6 @@ def N_dot_d12(ra,dec,gpstime,d1,d2):
     d12 = d1 - d2
     return np.dot(N, d12) / lal.C_SI
 
-def tau_12(ra,dec,gpstime,d1,d2,f):
-    return 2*np.pi*f*N_dot_d12(ra,dec,gpstime,d1,d2)
-
-"""Basic transformations"""
-def mchirp(m1,m2):
-    """
-    Compute chirp mass from component masses
-
-    Parameters
-    ----------
-    m1 : float
-        Mass 1
-    m2 : float
-        Mass 2
-
-    Returns
-    -------
-    float
-        Chirp mass
-
-    """
-    return np.power(m1*m2,3./5.)/np.power(m1+m2,1./5.)
-
-def symmetric_massratio(m1,m2):
-    """
-    Compute symmetric mass ratio from component masses
-
-    Parameters
-    ----------
-    m1 : float
-        Mass 1
-    m2 : float
-        Mass 2
-
-    Returns
-    -------
-    float
-        Symmetric mass ratio
-
-    """
-    return np.minimum((m1 * m2) / (m1 + m2) ** 2, 1 / 4)
-
 """Generate waveform"""
 def hp_hx(binary_parameters,waveform_generator):
     generate_h = waveform_generator.frequency_domain_strain(binary_parameters)
@@ -110,35 +68,3 @@ def hp_hx(binary_parameters,waveform_generator):
     hx = generate_h['cross']
     
     return hp, hx
-
-def hp_hx_freq(binary_parameters,waveform_generator,sampling_frequency,duration):
-    generate_h = waveform_generator.frequency_domain_strain(binary_parameters)
-
-    hp = generate_h['plus']
-    hx = generate_h['cross']
-    
-    fs = bilby.core.utils.series.create_frequency_series(sampling_frequency,duration)
-    
-    return hp, hx, fs 
-
-def strain_at_detector(hp,hx,binary_parameters,detector):
-    Fp, Fx = FpFx(detector,np.array([binary_parameters['ra']]), np.array([binary_parameters['dec']]), np.array([binary_parameters['psi']]), np.array([binary_parameters['geocent_time']]))
-    return hp*Fp + hx*Fx
-
-"""Signal to noise"""
-
-def noise_weighted_inner_product(aa, bb, power_spectral_density, duration):
-    # aa: strain at detector A
-    # bb: strain at detector B
-    # power_spectral_density: power spectral density
-    # duration: duration of the signal
-
-    integrand = np.conj(aa) * bb / power_spectral_density
-    return 4 / duration * np.sum(integrand)
-
-def snr(strain, power_spectral_density, duration):
-    # strain: strain at detector
-    # power_spectral_density: power spectral density
-    # duration: duration of the signal
-    snr2 = noise_weighted_inner_product(strain, strain, power_spectral_density, duration)
-    return np.sqrt(np.real(snr2))
