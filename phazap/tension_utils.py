@@ -7,6 +7,7 @@ from . import utils
 def distance(parameters_1,parameters_2):
     """
     Compute distance between two sets of parameters.
+    The definition is given in Eq. 10 of https://arxiv.org/pdf/2308.06616.pdf
 
     Parameters
     ----------
@@ -40,6 +41,22 @@ def distance(parameters_1,parameters_2):
 
 #Distance in 1D
 def distance1D(parameter_1,parameter_2):
+    """
+    Compute distance between two sets of parameters in 1D.
+    The definition is given in Eq. 10 of https://arxiv.org/pdf/2308.06616.pdf
+
+    Parameters
+    ----------
+    parameter_1 : array_like
+        First set of parameters.
+    parameter_2 : array_like
+        Second set of parameters.
+
+    Returns
+    -------
+    distance : float
+        Distance between the two sets of parameters.
+    """
     #Difference means
     mean_1 = np.mean(parameter_1,axis=0)
     mean_2 = np.mean(parameter_2,axis=0)
@@ -54,6 +71,24 @@ def distance1D(parameter_1,parameter_2):
     return np.sqrt(Dphi_12*c12_inv*Dphi_12)
 
 def distance_phases(parameters_1,parameters_2,nphases):
+    """
+    Compute distance between two sets of parameters accounting for the wrap around of the phases.
+
+    Parameters
+    ----------
+    parameters_1 : array_like
+        First set of parameters.
+    parameters_2 : array_like
+        Second set of parameters.
+    nphases : int
+        Number of phases. It is assumed that the first nphases parameters are phases.
+
+    Returns
+    -------
+    distance : float
+        Distance between the two sets of parameters accounting for the wrap around of the phases.
+    """
+
     #Wrap phases
     parameters_1_wrap, parameters_2_wrap = utils.wrap_phases(parameters_1,parameters_2,nphases)
 
@@ -63,6 +98,7 @@ def distance_phases(parameters_1,parameters_2,nphases):
 def distance_phases_with_shift(parameters_1,parameters_2,nphases):
     """
     Compute distance between two sets of parameters with possible lensing phase shifts.
+    Details in Eq. 12 of https://arxiv.org/pdf/2308.06616.pdf
 
     Parameters
     ----------
@@ -94,7 +130,22 @@ def distance_phases_with_shift(parameters_1,parameters_2,nphases):
 
 """Tension between data sets: only periodic phases"""
 
-def distance_only_phases(phases_1,phases_2):     
+def distance_only_phases(phases_1,phases_2):
+    """
+    Compute distance between two sets of phases accounting for the wrap around of the phases.  
+
+    Parameters
+    ----------
+    phases_1 : array_like
+        First set of phases.
+    phases_2 : array_like
+        Second set of phases.
+
+    Returns
+    -------
+    distance : float
+        Distance between the two sets of phases accounting for the wrap around of the phases.
+    """   
     #Wrap phases
     phases_1_wrap, phases_2_wrap = utils.wrap_only_phases(phases_1,phases_2)
 
@@ -102,6 +153,21 @@ def distance_only_phases(phases_1,phases_2):
     return distance(phases_1_wrap,phases_2_wrap)
 
 def distance_only_phases_with_shift(parameters_1,parameters_2):
+    """
+    Compute distance between two sets of phasess with possible lensing phase shifts.
+
+    Parameters
+    ----------
+    parameters_1 : array_like
+        First set of parameters.
+    parameters_2 : array_like
+        Second set of parameters.
+        
+    Returns
+    -------
+    distances : array_like
+        Distances between the two sets of phases with possible lensing phase shifts.
+    """
     #Add possible lensing phase shift
     phase_shifts = np.array([0,1,2,-1])*np.pi/2
     distances = 0.*phase_shifts
@@ -120,6 +186,7 @@ def distance_only_phases_with_shift(parameters_1,parameters_2):
 def volume(parameters): 
     """
     Volume of a set of parameters.
+    Definition in Eq. 17 of https://arxiv.org/pdf/2308.06616.pdf
 
     Parameters
     ----------
@@ -134,6 +201,21 @@ def volume(parameters):
     return np.sqrt(np.linalg.det(np.cov(parameters.T)))
 
 def volume_phases(parameters,nphases):
+    """
+    Volume of a set of parameters accounting for the wrap around of the phases.
+
+    Parameters
+    ----------
+    parameters : array_like
+        Set of parameters.
+    nphases : int
+        Number of phases. It is assumed that the first nphases parameters are phases.
+
+    Returns
+    -------
+    volume : float
+        Volume of the set of parameters accounting for the wrap around of the phases.
+    """
     phases = parameters[:,:nphases]
     
     #Wrap phases  around their modes 
@@ -148,6 +230,21 @@ def volume_phases(parameters,nphases):
     return np.sqrt(np.linalg.det(np.cov(parameters_wrap.T)))
 
 def volume_only_phases(phases_1,phases_2):
+    """
+    Volume of a set of parameters accounting for the wrap around of the phases.
+    
+    Parameters
+    ----------
+    phases_1 : array_like
+        First set of phases.
+    phases_2 : array_like
+        Second set of phases.
+
+    Returns
+    -------
+    volume : float
+        Volume of the set of parameters accounting for the wrap around of the phases.
+    """
     if len(phases_1) == 0:
         return 0
     elif np.shape(phases_1)[1] == 1:
@@ -163,7 +260,8 @@ def volume_only_phases(phases_1,phases_2):
 
 def n_eff(phases_1,phases_2,nphases,prior_range):
     """
-    Compute number of effective degrees of freedom.
+    Compute number of effective degrees of freedom. 
+    Definition in Eq. 11 of https://arxiv.org/pdf/2308.06616.pdf
 
     Parameters
     ----------
@@ -195,6 +293,24 @@ def n_eff(phases_1,phases_2,nphases,prior_range):
     return np.trace(cov_mult)
 
 def n_eff_1D(phase_1,phase_2,prior_range):
+    """
+    Compute number of effective degrees of freedom in 1D.
+    Definition in Eq. 11 of https://arxiv.org/pdf/2308.06616.pdf
+
+    Parameters
+    ----------
+    phase_1 : array_like
+        First set of phases.
+    phase_2 : array_like
+        Second set of phases.
+    prior_range : float
+        Prior range.
+
+    Returns
+    -------
+    n_eff : float
+        Number of effective degrees of freedom.
+    """
     #Flat prior on the phases
     var_prior = (prior_range**2) / 12
     cov_prior = 1.*var_prior
@@ -208,12 +324,50 @@ def n_eff_1D(phase_1,phase_2,prior_range):
     return cov_mult
 
 def n_eff_pair_1D(phases_1,phases_2,prior_range): 
+    """
+    Compute number of effective degrees of freedom in 1D for a pair.
+    Definition in Eq. 11 of https://arxiv.org/pdf/2308.06616.pdf
+
+    Parameters
+    ----------
+    phases_1 : array_like
+        First set of phases.
+    phases_2 : array_like
+        Second set of phases.
+    prior_range : float
+        Prior range.
+
+    Returns
+    -------
+    n_eff : float
+        Number of effective degrees of freedom.
+    """
     #Wrap phases
     phases_1_wrap, phases_2_wrap = utils.wrap_only_phases(phases_1,phases_2)
     
     return n_eff_1D(phases_1_wrap,phases_2_wrap,prior_range)
 
 def n_eff_pair(phases_1,phases_2,nphases,prior_range):
+    """
+    Compute number of effective degrees of freedom for a pair.
+    Definition in Eq. 11 of https://arxiv.org/pdf/2308.06616.pdf
+
+    Parameters
+    ----------
+    phases_1 : array_like
+        First set of phases.
+    phases_2 : array_like
+        Second set of phases.
+    nphases : int
+        Number of phases.
+    prior_range : float
+        Prior range.
+
+    Returns
+    -------
+    n_eff : float
+        Number of effective degrees of freedom.
+    """
     if nphases == 0:
         return 0
     elif nphases == 1:
