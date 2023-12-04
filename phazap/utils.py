@@ -18,6 +18,21 @@ from scipy.stats import chi2
 from scipy.interpolate import interp1d
 
 def p_sigma(dist,df):
+    """
+    Compute p-value from chi2 distribution
+
+    Parameters
+    ----------
+    dist : float
+        Distance
+    df : int
+        Degrees of freedom
+
+    Returns
+    -------
+    p : float
+        p-value
+    """
     ps = np.logspace(-15,0,10000)
     #df = 1
     chi2s = chi2.isf(ps,df)
@@ -28,10 +43,40 @@ def p_sigma(dist,df):
 
 #1D Maximum likelihood value from posterior samples
 def mode(posterior,bins=30):
+    """
+    Compute mode of a posterior distribution
+
+    Parameters
+    ----------
+    posterior : np.ndarray
+        Posterior samples
+    bins : int
+        Number of bins
+
+    Returns
+    -------
+    mode : float
+        Mode of the posterior
+    """
     bins, param = np.histogram(posterior,bins=bins)
     return param[np.argmax(bins)]
 
 def modes(posteriors,bins=30):
+    """
+    Compute modes of a set of posterior distributions
+
+    Parameters
+    ----------
+    posterior : np.ndarray
+        Posterior samples
+    bins : int
+        Number of bins
+
+    Returns
+    -------
+    modes : np.ndarray
+        Modes of the posteriors
+    """
     length = np.shape(posteriors)[-1]
     
     modes_c = np.zeros(length)
@@ -42,6 +87,26 @@ def modes(posteriors,bins=30):
 """ Wrap phases around their modes """
 
 def wrap_phases(parameters_1,parameters_2,nphases):
+    """
+    Wrap phases around their modes to avoid discontinuities from periodic boundaries
+
+    Parameters
+    ----------
+    parameters_1 : np.ndarray
+        Posterior samples
+    parameters_2 : np.ndarray
+        Posterior samples
+    nphases : int
+        Number of phases in the posterior samples.
+        It is assumed that the first nphases parameters are phases.
+
+    Returns
+    -------
+    parameters_1_wrap_mod : np.ndarray
+        Wrapped posterior samples of parameter_1. The phases are wrapped around the modes of parameters_1.
+    parameters_2_wrap_mod : np.ndarray
+        Wrapped posterior samples of parameter_2. The phases are wrapped around the modes of parameters_1.
+    """
     #Wrap phases around their modes 
     #to avoid discontinuities from periodic boundaries
     phases_1 = parameters_1[:,:nphases]
@@ -73,6 +138,23 @@ def wrap_phases(parameters_1,parameters_2,nphases):
     return parameters_1_wrap_mod, parameters_2_wrap_mod
 
 def wrap_only_phases(phases_1,phases_2):
+    """
+    Wrap phases around their modes to avoid discontinuities from periodic boundaries
+
+    Parameters
+    ----------
+    phases_1 : np.ndarray
+        Posterior samples of phases
+    phases_2 : np.ndarray
+        Posterior samples of phases
+
+    Returns
+    -------
+    phases_1_wrap : np.ndarray
+        Wrapped posterior samples of phases_1. The phases are wrapped around the modes of phases_1.
+    phases_2_wrap_mod : np.ndarray
+        Wrapped posterior samples of phases_2. The phases are wrapped around the modes of phases_1.
+    """
     #Wrap phases around their modes 
     #to avoid discontinuities from periodic boundaries
     
@@ -94,6 +176,19 @@ def wrap_only_phases(phases_1,phases_2):
     return phases_1_wrap, phases_2_wrap_mod
 
 def wrap_phase(phases_1):
+    """
+    Wrap phases around their modes to avoid discontinuities from periodic boundaries
+
+    Parameters
+    ----------
+    phases_1 : np.ndarray
+        Posterior samples of phases
+
+    Returns
+    -------
+    phases_1_wrap : np.ndarray
+        Wrapped posterior samples of phases_1. The phases are wrapped around their modes.
+    """
     #Wrap phases around their modes 
     #to avoid discontinuities from periodic boundaries
     
