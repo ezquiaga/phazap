@@ -8,7 +8,10 @@ DETECTORS = {'H1': lal.CachedDetectors[lal.LHO_4K_DETECTOR],
 
 def time_delay_det(detec,ra, dec, geocent_time):
     """
-    Compute time delay from Earth center to detector
+    Compute time delay from Earth center to detector. 
+
+    Wrap to LAL function TimeDelayFromEarthCenter. 
+    See L83 in https://docs.ligo.org/lscsoft/lalsuite/lal/_time_delay_8c_source.html
     
     Parameters
     ----------
@@ -34,7 +37,11 @@ def time_delay_det(detec,ra, dec, geocent_time):
 
 def FpFx(det,ra, dec, psi, geocent_time):
     """
-    Compute antenna pattern functions
+    Compute antenna pattern functions.
+
+    See Eq. A.1 in https://arxiv.org/abs/2308.06616.
+
+    Wrap to LAL function ComputeDetAMResponse. See https://docs.ligo.org/lscsoft/lalsuite/lal/antenna_8py_source.html
 
     Parameters
     ----------
