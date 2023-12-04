@@ -9,7 +9,9 @@ from .postprocess_phase import postprocess_phase, PostprocessedPhase, _variables
 
 def phases_events(event1_postprocessed_phase, event2_postprocessed_phase):
     """
-    Compute the detector, time-delay and :math:`\Delta\phi_f` phases of the two events
+    Compute the detector, time-delay and :math:`\Delta\phi_f` phases of the two events.
+
+    The procedure is described in Sec. 2 of https://arxiv.org/pdf/2308.06616.pdf
 
     Parameters
     ----------
@@ -80,7 +82,8 @@ def phases_events(event1_postprocessed_phase, event2_postprocessed_phase):
         tau_H_2_wrt_1[l] = 2.*np.pi*fbest*gwutils.time_delay_det("H1", ra_2[l], dec_2[l], geocent_time_2[l]-tc_shift_21)
         tau_L_2_wrt_1[l] = 2.*np.pi*fbest*gwutils.time_delay_det("L1", ra_2[l], dec_2[l], geocent_time_2[l]-tc_shift_21)
         tau_V_2_wrt_1[l] = 2.*np.pi*fbest*gwutils.time_delay_det("V1", ra_2[l], dec_2[l], geocent_time_2[l]-tc_shift_21)
-         #Define quadrant of the source
+        #Define quadrant of the source.
+        #See Appendix C of https://arxiv.org/pdf/2308.06616.pdf
         above_below[l] = gwutils.N_dot_cross_d123(ra_2[l],dec_2[l],geocent_time_2[l],gwutils.H1_vertex_meters,gwutils.L1_vertex_meters,gwutils.V1_vertex_meters)
     
     #Arrival time phase difference between detectors
@@ -165,6 +168,8 @@ def phazap_all_metrics_one_ordering(event1_postprocessed_phase, event2_postproce
     """
     Compute all metrics for one ordering of the two events
 
+    The method is described in Sec. 4 of https://arxiv.org/pdf/2308.06616.pdf
+
     Parameters
     ----------
     event1_postprocessed_phase : PostprocessedPhase
@@ -208,7 +213,7 @@ def phazap_all_metrics_one_ordering(event1_postprocessed_phase, event2_postproce
     vol_phases_1, vol_phases_2 = tension.volume_only_phases(det_phases_1,det_phases_2)
 
     #Compute distances
-    #We divide the samples in two groups, above and below the plane
+    #We divide the samples in two groups, above and below the plane of the detectors
     #only if the fraction of samples in each group is between 0.05 and 0.95
     frac_samples_below = len(above_below[above_below<0]) / len(above_below)
     frac_limit = 0.05
@@ -236,7 +241,9 @@ def phazap_all_metrics_one_ordering(event1_postprocessed_phase, event2_postproce
 
 def phazap_one_ordering(event1_postprocessed_phase, event2_postprocessed_phase):
     """
-    Compute the volume, distance and number of effective phases for one ordering of the two events
+    Compute the volume, distance and number of effective phases for one ordering of the two events. 
+
+    The method is described in Sec. 4 of https://arxiv.org/pdf/2308.06616.pdf
 
     Parameters
     ----------
