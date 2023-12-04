@@ -131,7 +131,9 @@ def postprocess_phase(
         output_filename=None,
     ):
     """
-    Postprocess the phase of the GW signal
+    Postprocess the phase of the GW signal.
+
+    The procedure is described in Sec. II of https://arxiv.org/pdf/2308.06616.pdf 
 
     Parameters
     ----------
@@ -254,21 +256,25 @@ def postprocess_phase(
     tau_L = 2.*np.pi*fbest*(geocent_time + time_delay_L)
     tau_V = 2.*np.pi*fbest*(geocent_time + time_delay_V)
 
-    #Arrival time phase difference between detectors
+    #Arrival time phase difference between detectors. 
+    #See Eq. 4 of https://arxiv.org/pdf/2308.06616.pdf
     tau_HL = tau_H-tau_L
     tau_HV = tau_H-tau_V
     tau_LV = tau_L-tau_V
 
-    #Detector phases
+    #Antenna patterns at each detector
     Fp_H, Fx_H = gwutils.FpFx("H1", ra, dec, psi, geocent_time)
     Fp_L, Fx_L = gwutils.FpFx("L1", ra, dec, psi, geocent_time)
     Fp_V, Fx_V = gwutils.FpFx("V1", ra, dec, psi, geocent_time)
 
+    #Detector phases. 
+    #See Eq. 2 of https://arxiv.org/pdf/2308.06616.pdf
     phase_H = gwphase.phase_d(phase_fbest,a22_fbest,zeta_fbest,Fp_H,Fx_H)
     phase_L = gwphase.phase_d(phase_fbest,a22_fbest,zeta_fbest,Fp_L,Fx_L)
     phase_V = gwphase.phase_d(phase_fbest,a22_fbest,zeta_fbest,Fp_V,Fx_V)
 
     #Detector phase evolution in frequency
+    #See paragraph below Eq. 2 of https://arxiv.org/pdf/2308.06616.pdf
     Dphi_f = phase_fhigh - phase_flow
 
     # Saving the data
