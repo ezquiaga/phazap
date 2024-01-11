@@ -3,9 +3,6 @@ import numpy as np
 
 import getdist
 from getdist import plots
-import matplotlib as mpl
-mpl.rcParams['text.usetex'] = True
-mpl.rcParams['font.family'] = 'serif'
 import matplotlib.pyplot as plt
 
 from .phazap import phases_events
@@ -14,7 +11,7 @@ from . import tension_utils as tension
 
 _default_plot_filename_str = "phazap_{}_{}_fbest_{}_fhigh_{}_flow_{}.pdf"
 
-def phazap_plot(event1_postprocessed_phase, event2_postprocessed_phase, output_dir="./", output_filename=None):
+def phazap_plot(event1_postprocessed_phase, event2_postprocessed_phase, output_dir="./", output_filename=None, use_latex=True):
     """
     Plot the postprocessed phase for two events
 
@@ -28,6 +25,8 @@ def phazap_plot(event1_postprocessed_phase, event2_postprocessed_phase, output_d
         Output directory
     output_filename: str, optional
         Output filename
+    use_latex: bool, optional
+        Use LaTeX for the labels
     
     Returns
     -------
@@ -35,6 +34,11 @@ def phazap_plot(event1_postprocessed_phase, event2_postprocessed_phase, output_d
         The figure object
     
     """
+    if use_latex:
+        import matplotlib as mpl
+        mpl.rcParams['text.usetex'] = True
+        mpl.rcParams['font.family'] = 'serif'
+
     parameters_1, parameters_2, det_phases_1, det_phases_2, tau_phases_1, tau_phases_2, Dphi_f_1, Dphi_f_2, above_below = phases_events(event1_postprocessed_phase, event2_postprocessed_phase)
 
     event_name_1 = "event_1"
