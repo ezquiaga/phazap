@@ -30,6 +30,7 @@ setuptools.setup(
         "getdist",
         "tqdm",
         "configargparse",
+        "numpy >= 1.21.0",
     ],
     classifiers=[
         "Programming Language :: Python :: 3.7",
